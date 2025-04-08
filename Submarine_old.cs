@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,14 +29,12 @@ public class Submarine : MonoBehaviour {
     public Material propSpinMat;
     
     public bool isPaused = false;
-    Renderer[] renderers;
 
-    // Reference to the GyroHandler (assign this via the Inspector)
-    public GyroHandler gyroHandler;
+    Renderer[] renderers;
     
     void Start () {
         currentSpeed = maxSpeed / 2.0f;
-        renderers = GetComponentsInChildren<Renderer>();
+        renderers = GetComponentsInChildren<Renderer> ();
     }
 
     void Update () {
@@ -54,55 +52,45 @@ public class Submarine : MonoBehaviour {
         }
         
         currentSpeed += acceleration * Time.deltaTime * accelDir;
-        currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed / 2.0f, maxSpeed);
+        currentSpeed = Mathf.Clamp (currentSpeed, -maxSpeed/2.0f, maxSpeed);
         float speedPercent = Mathf.Clamp(currentSpeed / maxSpeed, -1, 1);
 
-        // --- Determine control mode ---
-        // 1. If running on mobile and gyroscope input is active, use it.
-        if (Application.isMobilePlatform && gyroHandler != null && gyroHandler.hasGyroInput) {
-            // Map the gyro data to yaw and pitch velocities.
-            // Adjust the multipliers as needed for your game feel.
-            float targetYawVelocity = gyroHandler.rotationRate.y * maxTurnSpeed;
-            float targetPitchVelocity = gyroHandler.rotationRate.x * maxPitchSpeed;
-            
-            yawVelocity = Mathf.Lerp(yawVelocity, targetYawVelocity, Time.deltaTime * smoothTurnSpeed);
-            pitchVelocity = Mathf.Lerp(pitchVelocity, targetPitchVelocity, Time.deltaTime * smoothTurnSpeed);
-            
-            transform.localEulerAngles += (Vector3.up * yawVelocity + Vector3.left * pitchVelocity) * Time.deltaTime * speedPercent;
-            rudderYaw.localEulerAngles = Vector3.up * (yawVelocity / maxTurnSpeed) * rudderAngle;
-            rudderPitch.localEulerAngles = Vector3.left * (pitchVelocity / maxPitchSpeed) * rudderAngle;
-        }
-        // 2. Else, if the left mouse button is held, use mouse-based control.
-        else if (Input.GetMouseButton(0)) {
+        // Use mouse control if left mouse button is held, otherwise use keyboard controls.
+        if (Input.GetMouseButton(0)) {
+            // Mouse-based control
             Vector3 mousePos = Input.mousePosition;
-            // Set z so that ScreenToWorldPoint can use it correctly
             mousePos.z = Camera.main.WorldToScreenPoint(transform.position).z;
             Vector3 targetPoint = Camera.main.ScreenToWorldPoint(mousePos);
 
             // Calculate the desired direction to the target point
             Vector3 desiredDirection = (targetPoint - transform.position).normalized;
 
-            // Compute yaw difference (horizontal rotation)
+            // Compute the yaw difference (horizontal rotation)
             Vector3 flatCurrent = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
             Vector3 flatDesired = Vector3.ProjectOnPlane(desiredDirection, Vector3.up).normalized;
             float targetYawDiff = Vector3.SignedAngle(flatCurrent, flatDesired, Vector3.up);
 
-            // Compute pitch difference (vertical rotation) using the submarine’s right vector.
+            // Compute the pitch difference (vertical rotation) using the submarine’s right vector as the axis.
+            // Multiplying by -1 to invert up/down so that mouse up produces the expected pitch.
             float targetPitchDiff = -Vector3.SignedAngle(transform.forward, desiredDirection, transform.right);
 
-            // Map differences to target velocities (using 45° for full input)
+            // Map these differences to target velocities and apply mouse sensitivity (using 45° for full input).
             float targetYawVelocity = (targetYawDiff / 45f) * maxTurnSpeed * mouseSensitivity;
             float targetPitchVelocity = (targetPitchDiff / 45f) * maxPitchSpeed * mouseSensitivity;
 
+            // Smooth out the rotational input for yaw and pitch.
             yawVelocity = Mathf.Lerp(yawVelocity, targetYawVelocity, Time.deltaTime * smoothTurnSpeed);
             pitchVelocity = Mathf.Lerp(pitchVelocity, targetPitchVelocity, Time.deltaTime * smoothTurnSpeed);
             
+            // Apply rotations, taking speed percentage into account.
             transform.localEulerAngles += (Vector3.up * yawVelocity + Vector3.left * pitchVelocity) * Time.deltaTime * speedPercent;
+
+            // Update rudder angles to simulate control surfaces.
             rudderYaw.localEulerAngles = Vector3.up * (yawVelocity / maxTurnSpeed) * rudderAngle;
             rudderPitch.localEulerAngles = Vector3.left * (pitchVelocity / maxPitchSpeed) * rudderAngle;
         }
-        // 3. Otherwise, fall back to keyboard-based controls.
         else {
+            // Keyboard-based control
             float targetPitchVelocity = Input.GetAxisRaw("Vertical") * maxPitchSpeed;
             pitchVelocity = Mathf.Lerp(pitchVelocity, targetPitchVelocity, Time.deltaTime * smoothTurnSpeed);
 
@@ -113,11 +101,11 @@ public class Submarine : MonoBehaviour {
             rudderYaw.localEulerAngles = Vector3.up * (yawVelocity / maxTurnSpeed) * rudderAngle;
             rudderPitch.localEulerAngles = Vector3.left * (pitchVelocity / maxPitchSpeed) * rudderAngle;
         }
-        
+
         // Move the submarine forward.
         transform.Translate(transform.forward * currentSpeed * Time.deltaTime, Space.World);
 
-        // Rotate the propeller and update material transparency based on speed.
+        // Rotate the propeller and update material transparency based on speed percentage.
         propeller.Rotate(Vector3.forward * Time.deltaTime * propellerSpeedFac * speedPercent, Space.Self);
         propSpinMat.color = new Color(propSpinMat.color.r, propSpinMat.color.g, propSpinMat.color.b, speedPercent * 0.3f);
     }
