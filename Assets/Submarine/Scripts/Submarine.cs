@@ -51,8 +51,8 @@ public class Submarine : MonoBehaviour {
         }
         
         currentSpeed += acceleration * Time.deltaTime * accelDir;
-        currentSpeed = Mathf.Clamp (currentSpeed, 0, maxSpeed);
-        float speedPercent = Mathf.Clamp(currentSpeed / maxSpeed, 0, 1);
+        currentSpeed = Mathf.Clamp (currentSpeed, -maxSpeed/2.0f, maxSpeed);
+        float speedPercent = Mathf.Clamp(currentSpeed / maxSpeed, -1, 1);
 
         Vector3 targetVelocity = transform.forward * currentSpeed;
         velocity = Vector3.Lerp (velocity, targetVelocity, Time.deltaTime * smoothSpeed);
