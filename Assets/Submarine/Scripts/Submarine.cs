@@ -30,7 +30,7 @@ public class Submarine : MonoBehaviour {
     Renderer[] renderers;
     
     void Start () {
-        currentSpeed = maxSpeed;
+        currentSpeed = maxSpeed / 2.0f;
         renderers = GetComponentsInChildren<Renderer> ();
     }
 
@@ -49,10 +49,10 @@ public class Submarine : MonoBehaviour {
         if (Input.GetKey (KeyCode.E)) {
             accelDir += 1;
         }
-
+        
         currentSpeed += acceleration * Time.deltaTime * accelDir;
         currentSpeed = Mathf.Clamp (currentSpeed, 0, maxSpeed);
-        float speedPercent = currentSpeed / maxSpeed;
+        float speedPercent = Mathf.Clamp(currentSpeed / maxSpeed, 0, 1);
 
         Vector3 targetVelocity = transform.forward * currentSpeed;
         velocity = Vector3.Lerp (velocity, targetVelocity, Time.deltaTime * smoothSpeed);
