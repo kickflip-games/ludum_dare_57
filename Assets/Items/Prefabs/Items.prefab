@@ -125,8 +125,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isCollected: 0
-  followOffset: {x: 0, y: -185.4, z: 0}
-  followSpeed: 60
+  followOffset: {x: 0, y: 0, z: 0}
+  followSpeed: 10
 --- !u!114 &8139848833255218994
 MonoBehaviour:
   m_ObjectHideFlags: 0

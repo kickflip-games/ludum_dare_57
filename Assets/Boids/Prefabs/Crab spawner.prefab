@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crabPrefab: {fileID: 5498415859747752232, guid: 5f3ebe96ea0f989479d4538bcc3f2007,
     type: 3}
-  spawnInterval: 0.8
+  spawnInterval: 1
   chunksHolder: {fileID: 0}
