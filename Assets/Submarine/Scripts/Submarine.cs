@@ -33,8 +33,8 @@ public class Submarine : MonoBehaviour {
     Renderer[] renderers;
     
     void Start () {
-        currentSpeed = maxSpeed;
-        renderers = GetComponentsInChildren<Renderer>();
+        currentSpeed = maxSpeed / 2.0f;
+        renderers = GetComponentsInChildren<Renderer> ();
     }
 
     void Update () {
@@ -50,9 +50,10 @@ public class Submarine : MonoBehaviour {
         if (Input.GetKey(KeyCode.E)) {
             accelDir += 1;
         }
+        
         currentSpeed += acceleration * Time.deltaTime * accelDir;
-        currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
-        float speedPercent = currentSpeed / maxSpeed;
+        currentSpeed = Mathf.Clamp (currentSpeed, -maxSpeed/2.0f, maxSpeed);
+        float speedPercent = Mathf.Clamp(currentSpeed / maxSpeed, -1, 1);
 
         // Use mouse control if left mouse button is held, otherwise use keyboard controls.
         if (Input.GetMouseButton(0)) {
