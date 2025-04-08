@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: bdb1cbda3fa076749b577d0be9dcd112
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 226229
+  packageName: Game Core - Radar System
+  packageVersion: 1.0
+  assetPath: Assets/Ilumisoft/RadarSystem/Prefabs/Radar.prefab
+  uploadId: 571174

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a35fd54ac079a8b47aa6549789157333
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 226229
+  packageName: Game Core - Radar System
+  packageVersion: 1.0
+  assetPath: Assets/Ilumisoft/RadarSystem/Scripts/Locatable/Locatable.cs
+  uploadId: 571174
