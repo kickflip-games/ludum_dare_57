@@ -53,7 +53,7 @@ MonoBehaviour:
   target: {fileID: 0}
   closeRadius: 0.4
   maxSpeed: 100
-  acceleration: 50
+  acceleration: 30
   decelerationMultiplier: 2
   reTargetInterval: 0.5
   positionSmoothTime: 0.2

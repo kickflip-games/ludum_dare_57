@@ -8,5 +8,6 @@ namespace Ilumisoft.RadarSystem.UI
     public abstract class LocatableIconComponent : MonoBehaviour
     {
         public abstract void SetVisible(bool visibility);
+        public abstract void SetSprite(int id);
     }
 }
