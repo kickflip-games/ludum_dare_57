@@ -45,10 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99c119fd16f194610b2f8383d5cbfa9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 5
-  speed: 1
-  wiggleSpeed: 5
-  wiggleAmount: 15
+  centerPoint: {fileID: 0}
+  radius: 7
+  speed: 2
+  wiggleSpeed: 40
+  wiggleAmount: 20
 --- !u!1001 &4949069699589654538
 PrefabInstance:
   m_ObjectHideFlags: 0
