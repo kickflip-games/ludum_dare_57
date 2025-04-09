@@ -45,11 +45,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99c119fd16f194610b2f8383d5cbfa9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPoint: {fileID: 0}
-  radius: 7
-  speed: 2
-  wiggleSpeed: 40
+  wiggleTime: 0.5
   wiggleAmount: 20
+  centerPoint: {fileID: 0}
+  radius: 15
+  idleSpeed: 1
+  target: {fileID: 0}
+  followDistance: 3
+  minDistanceToRecalculate: 2
+  maxSpeed: 3
+  acceleration: 1
+  decelerationMultiplier: 2
+  reTargetInterval: 0.5
 --- !u!1001 &4949069699589654538
 PrefabInstance:
   m_ObjectHideFlags: 0
