@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using SK.GyroscopeWebGL;
@@ -6,72 +7,69 @@ namespace SK.GyroscopeWebGL.Examples
 {
     public class SK_GyroscopeTest : MonoBehaviour
     {
-        public Text Label;
-        public Transform Model;
-        public Button Button;
-        public Button CalibrateButton;  // Reference to the new calibration button
+        public Text Label;         // For displaying sensor values (optional)
+        public Transform Model;    // The 3D model whose rotation will be updated
 
-        // Holds the calibration offset (default: identity means no calibration)
+        // Calibration offset; default is identity (no calibration)
         private Quaternion calibrationOffset = Quaternion.identity;
-        // Store the most recent reading for calibration purposes.
+        // Store the most recent gyroscope reading
         private GyroscopeData lastReading;
-
-        void Awake()
-        {
-            Button.onClick.AddListener(ToggleGyroscope);
-            CalibrateButton.onClick.AddListener(CalibrateGyro);
-        }
 
         private void Start()
         {
+            // Start the gyroscope listener by default
             SK_DeviceSensor.StartGyroscopeListener(OnGyroscopeReading);
-            Button.GetComponentInChildren<Text>().text = SK_DeviceSensor.IsGyroscopeStarted ? "Gyro Stop" : "Gyro Start";
+            
+            // Automatically calibrate the gyroscope after a short delay to allow valid readings to come in.
+            StartCoroutine(CalibrateGyroAtStart());
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             SK_DeviceSensor.StopGyroscopeListener();
         }
 
-        private void OnGyroscopeReading(GyroscopeData reading)
+        /// <summary>
+        /// Wait a short time before calibrating, so that a valid sensor reading is available.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator CalibrateGyroAtStart()
         {
-            // Store the last reading
-            lastReading = reading;
-
-            // Apply calibration offset (current sensor reading becomes zero)
-            Quaternion calibratedRotation = calibrationOffset * reading.UnityRotation;
-
-            // Update the UI label with the calibrated rotation values
-            Label.text = $"";
+            // Wait for a half-second; adjust if necessary for your specific hardware/environment.
+            yield return new WaitForSeconds(0.5f);
             
-            // Update the 3D model's rotation
-            Model.rotation = calibratedRotation;
-        }
-
-        private void ToggleGyroscope()
-        {
-            if (SK_DeviceSensor.IsGyroscopeStarted)
+            // Only calibrate if a valid sensor reading has been received.
+            if (lastReading != null)
             {
-                SK_DeviceSensor.StopGyroscopeListener();
+                calibrationOffset = Quaternion.Inverse(lastReading.UnityRotation);
+                Debug.Log("Gyroscope calibrated at start.");
             }
             else
             {
-                SK_DeviceSensor.StartGyroscopeListener(OnGyroscopeReading);
+                Debug.LogWarning("No valid gyro reading available for calibration.");
+            }
+        }
+
+        /// <summary>
+        /// This callback is called every time a new gyroscope reading is received.
+        /// </summary>
+        /// <param name="reading">The current sensor reading.</param>
+        private void OnGyroscopeReading(GyroscopeData reading)
+        {
+            // Save the latest reading for calibration purposes.
+            lastReading = reading;
+
+            // Apply the calibration offset: this adjusts the reading so that the calibrated orientation becomes zero.
+            Quaternion calibratedRotation = calibrationOffset * reading.UnityRotation;
+
+            // Optionally display the sensor data on the UI Label.
+            if (Label != null)
+            {
+                Label.text = $"alpha: {reading.Alpha}, beta: {reading.Beta}, gamma: {reading.Gamma}, absolute: {reading.Absolute}, unityRotation: {calibratedRotation}";
             }
 
-            Button.GetComponentInChildren<Text>().text = SK_DeviceSensor.IsGyroscopeStarted ? "Gyro Stop" : "Gyro Start";
-        }
-        
-        // Calibration method to set the current orientation as the new zero.
-        private void CalibrateGyro()
-        {
-            // Ensure there's a valid sensor reading for calibration.
-            // (If GyroscopeData is a class, you can check for null; if it's a struct, consider another flag.)
-            // Here we assume a valid reading has been obtained.
-            calibrationOffset = Quaternion.Inverse(lastReading.UnityRotation);
-
-            // Update the label to confirm calibration (optional)
-            Label.text += "\nCalibrated!";
+            // Update the model's rotation using the calibrated rotation.
+            Model.rotation = calibratedRotation;
         }
     }
 }
