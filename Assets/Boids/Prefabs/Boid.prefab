@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6349151928875962174}
   - component: {fileID: 2931604500597588581}
   m_Layer: 7
-  m_Name: boid
+  m_Name: Boid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,6 +134,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1172135614705362283, guid: b2f44189fc1bd3d43b5f8ff91574b911,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1172135614705362283, guid: b2f44189fc1bd3d43b5f8ff91574b911,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
