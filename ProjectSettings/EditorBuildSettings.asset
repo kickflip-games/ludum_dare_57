@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Submarine.unity
     guid: ea180d5c2a0fe4bd3a916b7b3c598eff
+  - enabled: 0
+    path: Assets/SK_DeviceSensor/Examples/Scenes/SampleScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
