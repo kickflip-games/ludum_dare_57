@@ -10,9 +10,12 @@ public class Item : MonoBehaviour
     // Flag to indicate whether this item was collected
     [SerializeField]
     private bool isCollected = false;
+    
+    
 
     // The target submarine that this item should follow
     private Transform targetSubmarine;
+    private Fish fish;
 
     // The offset relative to the submarine’s position (adjust as needed)
     public Vector3 followOffset = new Vector3(0, 0, -2);
@@ -27,6 +30,7 @@ public class Item : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+        fish = GetComponentInChildren<Fish>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -60,6 +64,11 @@ public class Item : MonoBehaviour
         {
             isCollected = true;
             targetSubmarine = submarineTransform;
+            fish.target = targetSubmarine;
+            fish.transform.parent = null;
+            
+            
+            
             
             // Optionally, disable physics and colliders so the item no longer interacts with the world.
             if (rb != null)
@@ -70,6 +79,10 @@ public class Item : MonoBehaviour
             {
                 col.enabled = false;
             }
+
+            // Destroy this
+            Destroy(this.gameObject);
+            
         }
     }
 
