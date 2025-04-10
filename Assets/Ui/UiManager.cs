@@ -8,16 +8,25 @@ public class UiManager : MonoBehaviour
     public TMP_Text itemCountText;
     public TMP_Text timeText;
 
-    private int totalItemsToCollect;
-    private int itemsCollected = 0;
 
     public GameObject messagePanel;
     public TMP_Text messageText;
+    public ProgressBar cleanup_progress_bar;
 
-    public GameManager _gameManager;
-
+    private GameManager _gameManager;
     private Coroutine _timerCoroutine;
     private float _elapsedTime = 0f;
+    private int totalItemsToCollect;
+    private int itemsCollected = 0;
+
+    private int cleanup_percent
+    {
+        get
+        {
+            int v = (itemsCollected / totalItemsToCollect) * 100;
+            return Math.Clamp(v, 5, 100);;
+        }
+    }
 
     private void Awake()
     {
@@ -45,6 +54,7 @@ public class UiManager : MonoBehaviour
             GameManager.OnGameStart -= StartTimerAndHideStartUi;
             GameManager.OnGameOver -= StopTimerAndShowEndPanel;
         }
+
         if (_timerCoroutine != null)
         {
             StopCoroutine(_timerCoroutine);
@@ -54,6 +64,7 @@ public class UiManager : MonoBehaviour
     private void Start()
     {
         messageText = messagePanel.GetComponentInChildren<TMP_Text>();
+        cleanup_progress_bar.BarValue = 5;
         if (_gameManager != null)
         {
             ShowStartPanel();
@@ -70,7 +81,7 @@ public class UiManager : MonoBehaviour
         messagePanel.SetActive(true);
         messageText.text = "Collect Fishies!\nClick to start the game";
     }
-    
+
     // Combined Stop Timer and Show End Panel for the GameManager event
     private void StopTimerAndShowEndPanel()
     {
@@ -84,12 +95,14 @@ public class UiManager : MonoBehaviour
     {
         totalItemsToCollect = totalItems;
         UpdateItemCountUI();
+        cleanup_progress_bar.BarValue = 5;
     }
 
     public void IncrementItemCount()
     {
         itemsCollected++;
         UpdateItemCountUI();
+        cleanup_progress_bar.BarValue = cleanup_percent;
     }
 
     private void UpdateItemCountUI()
@@ -122,6 +135,7 @@ public class UiManager : MonoBehaviour
         {
             return $"{(int)time}s";
         }
+
         return $"{(int)(time / 60)}m {((int)time % 60)}s";
     }
 

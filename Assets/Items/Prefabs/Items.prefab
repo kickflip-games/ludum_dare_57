@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5724180952032894002}
   - component: {fileID: 6300215302600566603}
   - component: {fileID: 8139848833255218994}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Items
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -125,8 +125,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isCollected: 0
-  followOffset: {x: 0, y: 0, z: 0}
-  followSpeed: 10
 --- !u!114 &8139848833255218994
 MonoBehaviour:
   m_ObjectHideFlags: 0

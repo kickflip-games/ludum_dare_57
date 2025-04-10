@@ -30,13 +30,13 @@ public class SubmarineTrail : MonoBehaviour
     {
         if (turnOn && !IsOn) // Trail is off and we have just toggled it on
         {
-            Debug.Log("Trail is off and we have just toggled it on");
+            // Debug.Log("Trail is off and we have just toggled it on");
             IsOn = true;
             GraduallyChangeDuration(0, trailTime, 0.2f);
         }
         else if (!turnOn && IsOn) // Trail is on and we have just toggled it off
         {
-            Debug.Log("Trail is on and we have just toggled it off");
+            // Debug.Log("Trail is on and we have just toggled it off");
             IsOn = false;
             GraduallyChangeDuration(trailTime, 0, 0.2f);
         }

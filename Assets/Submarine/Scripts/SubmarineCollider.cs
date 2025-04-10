@@ -17,9 +17,6 @@ public class SubmarineCollider : MonoBehaviour
         
         Debug.Log("Submarine crashed!");
         _main.TakeDamage();
-
-        
-        
     }
 
 

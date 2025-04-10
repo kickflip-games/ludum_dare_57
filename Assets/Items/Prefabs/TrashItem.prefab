@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 8846922185541820100}
   - component: {fileID: 2964960948786274444}
   - component: {fileID: 6008232617047620397}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: CollectableItem
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -322,10 +322,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedRange:
-  - 0.1
   - 0.5
+  - 1.5
   rotationSpeedRange:
-  - 0.3
+  - 0.5
   - 2
 --- !u!1001 &9032498979131287141
 PrefabInstance:
@@ -399,6 +399,11 @@ PrefabInstance:
         type: 3}
       propertyPath: minScale
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7106992967649398163, guid: 26813f280dfe44fe397546ab45314a32,
+        type: 3}
+      propertyPath: spawnRate
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7106992967649398163, guid: 26813f280dfe44fe397546ab45314a32,
         type: 3}

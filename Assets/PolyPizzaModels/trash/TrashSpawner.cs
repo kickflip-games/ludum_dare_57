@@ -108,7 +108,12 @@ public class TrashSpawner : MonoBehaviour
 
         trashObject.transform.DOScale(Vector3.zero, shrinkDuration)
             .SetEase(Ease.InBack)
-            .OnComplete(() => { Destroy(trashObject); });
+            .OnComplete(() =>
+            {
+                // Stop all tweens on the object before destroying it
+                trashObject.transform.DOKill();
+                Destroy(trashObject);
+            });
     }
 
     void OnDrawGizmosSelected()
