@@ -26,6 +26,7 @@ public class Submarine : MonoBehaviour {
     float yawVelocity;
     float pitchVelocity;
     float currentSpeed;
+    bool isTurning;
     public Material propSpinMat;
     
     public bool isPaused = false;
@@ -34,11 +35,27 @@ public class Submarine : MonoBehaviour {
     // Reference to the GyroHandler (assign this via the Inspector)
     public GyroHandler gyroHandler;
     
+    private List<SubmarineTrail> Trails = new List<SubmarineTrail>();
+    
     void Start () {
         currentSpeed = maxSpeed / 2.0f;
         renderers = GetComponentsInChildren<Renderer>();
+        foreach (SubmarineTrail t in GetComponentsInChildren<SubmarineTrail>()) {
+            Trails.Add(t);
+        }
     }
+    
+    public void ToggleTrailIfTurning() {
 
+        foreach (var trail in Trails) {
+            if (isTurning) {
+                trail.ToggleTrail(true);
+            } else {
+                trail.ToggleTrail(false);
+            }
+        }
+    }
+    
     void Update () {
         if (isPaused) {
             return;
@@ -120,6 +137,9 @@ public class Submarine : MonoBehaviour {
         // Rotate the propeller and update material transparency based on speed.
         propeller.Rotate(Vector3.forward * Time.deltaTime * propellerSpeedFac * speedPercent, Space.Self);
         propSpinMat.color = new Color(propSpinMat.color.r, propSpinMat.color.g, propSpinMat.color.b, speedPercent * 0.3f);
+        
+        isTurning = Mathf.Abs(yawVelocity) > 10.0f || Mathf.Abs(pitchVelocity) > 10.0f;
+        ToggleTrailIfTurning();
     }
 
     public void TakeDamage () {

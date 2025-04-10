@@ -44,11 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bf7a7307cbf44d818b015247e618bdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 537737768097938033, guid: 4a6d7d4f1bc42475fb9a49037198e8c7,
+  itemPrefab: {fileID: 8141749498972767929, guid: ae5713f60e9d5473ca28d0b2208be3a1,
     type: 3}
-  spawnRadius: 10
+  spawnBounds: {x: 10, y: 0, z: 10}
+  totalSpawnedItems: 0
   checkRadius: 0.5
   collisionLayers:
     serializedVersion: 2
     m_Bits: 0
   maxAttempts: 10
+  itemsToSpawn: 10
+  spawnedItems: []
