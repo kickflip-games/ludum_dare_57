@@ -23,7 +23,8 @@ public class UiManager : MonoBehaviour
     {
         get
         {
-            int v = (itemsCollected / totalItemsToCollect) * 100;
+            int v = (int)(((float)itemsCollected / totalItemsToCollect) * 100.0);
+            print("cleanup_percent: " + v);
             return Math.Clamp(v, 5, 100);;
         }
     }
