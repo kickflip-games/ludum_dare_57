@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using TMPro;
 
@@ -10,6 +11,7 @@ public class UiManager : MonoBehaviour
 
 
     public GameObject messagePanel;
+    private CanvasGroup _messagePanelCanvasGroup;
     public TMP_Text messageText;
     public ProgressBar cleanup_progress_bar;
 
@@ -32,6 +34,7 @@ public class UiManager : MonoBehaviour
     private void Awake()
     {
         _gameManager = FindObjectOfType<GameManager>();
+        
     }
 
     private void OnEnable()
@@ -65,6 +68,7 @@ public class UiManager : MonoBehaviour
     private void Start()
     {
         messageText = messagePanel.GetComponentInChildren<TMP_Text>();
+        _messagePanelCanvasGroup = messagePanel.GetComponent<CanvasGroup>();
         cleanup_progress_bar.BarValue = 5;
         if (_gameManager != null)
         {
@@ -79,18 +83,60 @@ public class UiManager : MonoBehaviour
 
     public void ShowStartPanel()
     {
-        messagePanel.SetActive(true);
-        messageText.text = "Collect Fishies!\nClick to start the game";
+        // messagePanel.SetActive(true);
+        // messageText.text = "Collect Fishies!\nClick to start the game";
+        
+        AnimateMessagePanel(
+            "Clear Trash!\nClick to start the game",
+            0.1f,
+            false
+        );
     }
 
     // Combined Stop Timer and Show End Panel for the GameManager event
     private void StopTimerAndShowEndPanel()
     {
         StopTimer();
-        messagePanel.SetActive(true);
-        messageText.text = "All fishies collected in " + timeText.text + "!\nClick to restart";
+        // messagePanel.SetActive(true);
+        // messageText.text = "All fishies collected in " + timeText.text + "!\nClick to restart";
+        String txt = "All clean! You took " + timeText.text + "!\nClick to restart";
+        AnimateMessagePanel(
+            txt,
+            1.0f,
+            false
+        );
+
+
     }
 
+    public void AnimateMessagePanel(string txt, float duration, bool hide)
+    {
+        if (!hide)
+        {
+            _messagePanelCanvasGroup.alpha = 0;
+            messagePanel.SetActive(true);
+        }
+        
+        
+        // DoTween to animate the message panel 
+        float targetAlpha = hide ? 0 : 0.5f;
+        _messagePanelCanvasGroup.DOFade(targetAlpha, duration).OnComplete(() =>
+        {
+            messagePanel.SetActive(!hide);
+        });
+        
+        // Pulsate the message text while message panel is active 
+        if (!hide)
+        {
+            messageText.text = txt;
+            messageText.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0), duration, 1, 0);
+        }
+        else
+        {
+            messageText.transform.localScale = Vector3.one;
+            messageText.text = "";
+        }
+    }
 
     public void InitializeItemCount(int totalItems)
     {
@@ -144,8 +190,13 @@ public class UiManager : MonoBehaviour
     {
         _elapsedTime = 0f;
         _timerCoroutine = StartCoroutine(TimerCoroutine());
-        messagePanel.SetActive(false);
-        messageText.text = "";
+        
+        // Hide the start panel
+        AnimateMessagePanel(
+            "",
+            0.1f,
+            true
+        );
     }
 
     private void StopTimer()

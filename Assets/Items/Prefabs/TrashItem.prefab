@@ -307,7 +307,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.17
+  m_Radius: 0.41
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5568905600988261174
 MonoBehaviour:
@@ -322,11 +322,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedRange:
-  - 0.5
-  - 1.5
+  - 1
+  - 3
   rotationSpeedRange:
-  - 0.5
-  - 2
+  - 1
+  - 3
 --- !u!1001 &9032498979131287141
 PrefabInstance:
   m_ObjectHideFlags: 0

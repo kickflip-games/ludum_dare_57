@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 [ExecuteInEditMode]
 public class ProgressBar : MonoBehaviour
@@ -14,9 +15,10 @@ public class ProgressBar : MonoBehaviour
     public int TitleFontSize = 10;
 
     [Header("Bar Setting")]
-    public Color BarColor;
+    // public Color BarColor;
     public Color BarBackGroundColor;
     public Sprite BarBackGroundSprite;
+    public Gradient BarGradient;
     [Range(1f, 100f)]
     public int Alert = 20;
     public Color BarAlertColor;
@@ -31,6 +33,11 @@ public class ProgressBar : MonoBehaviour
     private AudioSource audiosource;
     private TextMeshProUGUI txtTitle;
     private float barValue;
+    private RectTransform rectTransform;
+    
+    [Header("Animation")]
+    float anim_duration = 1.5f;
+    
 
     public float BarValue
     {
@@ -43,6 +50,9 @@ public class ProgressBar : MonoBehaviour
             UpdateValue(barValue);
         }
     }
+    
+    
+    
 
     private void Awake()
     {
@@ -51,6 +61,7 @@ public class ProgressBar : MonoBehaviour
         txtTitle = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         barBackground = transform.Find("BarBackground").GetComponent<Image>();
         audiosource = GetComponent<AudioSource>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     private void Start()
@@ -60,7 +71,7 @@ public class ProgressBar : MonoBehaviour
         txtTitle.font = TitleFont;
         txtTitle.fontSize = TitleFontSize;
 
-        bar.color = BarColor;
+        bar.color = BarGradient.Evaluate(barValue/100);
         barBackground.color = BarBackGroundColor;
         barBackground.sprite = BarBackGroundSprite;
 
@@ -69,17 +80,31 @@ public class ProgressBar : MonoBehaviour
 
     void UpdateValue(float val)
     {
-        bar.fillAmount = val / 100;
-        txtTitle.text = Title + " " + val + "%";
-
-        if (Alert >= val)
+        
+        // Do Tween animations for updating the bar:
+        // 1. update the bar value
+        // 2. update the bar color
+        // 3. update the title text
+        
+        float start = bar.fillAmount * 100;
+        // DoTween animation for changeing the title text value 
+        DOTween.To(() => start, x => {
+            start = x;
+            bar.fillAmount = x / 100;
+            bar.color = BarGradient.Evaluate(x / 100);
+            txtTitle.text = Title + " " + (int)(x) + "%";
+        }, val, anim_duration).SetEase(Ease.OutBounce);
+        
+        
+        
+        // get rect transform scale of the game object
+        float orig_scale = rectTransform.localScale.x;
+        // Scale the game object and then scale it back to normal (with previous tween)
+        rectTransform.DOScale(orig_scale*1.5f, anim_duration).SetEase(Ease.OutBounce).OnComplete(() =>
         {
-            bar.color = BarAlertColor;
-        }
-        else
-        {
-            bar.color = BarColor;
-        }
+            rectTransform.DOScale(orig_scale, anim_duration).SetEase(Ease.OutCubic);
+        });
+        
     }
 
     private void Update()
@@ -90,10 +115,7 @@ public class ProgressBar : MonoBehaviour
             txtTitle.color = TitleColor;
             txtTitle.font = TitleFont;
             txtTitle.fontSize = TitleFontSize;
-
-            bar.color = BarColor;
             barBackground.color = BarBackGroundColor;
-
             barBackground.sprite = BarBackGroundSprite;
         }
         else

@@ -1,6 +1,10 @@
 using Ilumisoft.RadarSystem.UI;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Ilumisoft.RadarSystem
 {
@@ -45,6 +49,14 @@ namespace Ilumisoft.RadarSystem
         [Tooltip("Vertical difference threshold to change icon (in meters)")]
         private float verticalThreshold = 1.0f;
 
+        // Section
+        [Header("Radar Sweep")]
+        [Tooltip("Radar sweep line")]
+        public RectTransform radarSweepLine;
+        [Tooltip("Speed of the radar sweep line (in degrees per second)")]
+        public float sweepSpeed = 180.0f;
+        
+        
         private void OnEnable()
         {
             LocatableManager.OnLocatableAdded += OnLocatableAdded;
@@ -86,6 +98,11 @@ namespace Ilumisoft.RadarSystem
 
         private void Update()
         {
+            
+            float previousRotation = (radarSweepLine.eulerAngles.z % 360) - 180;
+            radarSweepLine.eulerAngles -= new Vector3(0, 0, sweepSpeed * Time.deltaTime);
+            float currentRotation = (radarSweepLine.eulerAngles.z % 360) - 180;
+            
             if (Player != null)
             {
                 UpdateLocatableIcons();
