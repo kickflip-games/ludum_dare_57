@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿// BoidManager.cs
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering; // Needed for AsyncGPUReadback
 
@@ -8,22 +9,45 @@ public class BoidManager : MonoBehaviour {
 
     public BoidSettings settings;
     public ComputeShader compute;
+
     Boid[] boids;
 
-    void Start () {
+    // Persistent compute buffer (assumes boid count remains constant)
+    ComputeBuffer boidBuffer;
+
+
+    void Start() {
+        
+        Debug.Log("------COMPUTE SHADER INFO------");
+        Debug.Log("Max compute buffer inputs: " + SystemInfo.maxComputeBufferInputsVertex);
+        Debug.Log("Max compute buffer inputs (fragment): " + SystemInfo.maxComputeBufferInputsFragment);
+        Debug.Log("Supports compute shaders: " + SystemInfo.supportsComputeShaders);
+        Debug.Log("Max compute work group size: " + SystemInfo.maxComputeWorkGroupSize); // Available in newer Unity versions
+        Debug.Log("-------------------------------");
+        
         boids = FindObjectsOfType<Boid>();
         foreach (Boid b in boids) {
             b.Initialize(settings, null);
         }
+        // Create the compute buffer for all boids once.
+        if (boids != null && boids.Length > 0) {
+            boidBuffer = new ComputeBuffer(boids.Length, BoidData.Size);
+        }
     }
 
-    void Update () {
-        if (boids != null) {
-            if (!SystemInfo.supportsComputeShaders) {
-                RunBoidsOnCPU();
-            } else {
-                RunBoidsOnGPU();
-            }
+    void OnDestroy() {
+        if (boidBuffer != null)
+            boidBuffer.Release();
+    }
+
+    void Update() {
+        if (boids == null) return;
+
+        // Choose processing path depending on GPU support.
+        if (!SystemInfo.supportsComputeShaders) {
+            RunBoidsOnCPU();
+        } else {
+            RunBoidsOnGPU();
         }
     }
 
@@ -43,18 +67,24 @@ public class BoidManager : MonoBehaviour {
             }
         }
     }
-    
+
+    // GPU processing path.
     void RunBoidsOnGPU() {
         int numBoids = boids.Length;
-        // Prepare the data to be sent to the GPU.
+
+        // Prepare data to send to the GPU.
         var boidData = new BoidData[numBoids];
         for (int i = 0; i < numBoids; i++) {
             boidData[i].position = boids[i].position;
             boidData[i].direction = boids[i].forward;
+            // Reset computed values to zero before the compute shader writes into them.
+            boidData[i].flockHeading = Vector3.zero;
+            boidData[i].flockCentre = Vector3.zero;
+            boidData[i].avoidanceHeading = Vector3.zero;
+            boidData[i].numFlockmates = 0;
         }
-        
-        // Create a compute buffer and load data.
-        var boidBuffer = new ComputeBuffer(numBoids, BoidData.Size);
+
+        // Update our persistent compute buffer with the new boid data.
         boidBuffer.SetData(boidData);
 
         // Set compute shader buffers and parameters.
@@ -66,9 +96,8 @@ public class BoidManager : MonoBehaviour {
         int threadGroups = Mathf.CeilToInt(numBoids / (float)threadGroupSize);
         compute.Dispatch(0, threadGroups, 1, 1);
 
-        // Request an asynchronous GPU readback of the compute buffer.
+        // Request an asynchronous GPU readback.
         AsyncGPUReadback.Request(boidBuffer, request => {
-            // First, check for errors
             if (request.hasError) {
                 Debug.LogError("GPU readback error detected.");
             } else {
@@ -87,11 +116,11 @@ public class BoidManager : MonoBehaviour {
                 }
             }
             // Always release the compute buffer when done.
-            boidBuffer.Release();
+            // boidBuffer.Release();
         });
     }
-    
-    
+
+    // CPU fallback path.
     void RunBoidsOnCPU() {
         for (int i = 0; i < boids.Length; i++) {
             Vector3 flockHeading = Vector3.zero;
@@ -117,6 +146,7 @@ public class BoidManager : MonoBehaviour {
                 flockHeading /= numFlockmates;
             }
 
+            // For CPU, update boids immediately.
             boids[i].avgFlockHeading = flockHeading;
             boids[i].centreOfFlockmates = flockCentre;
             boids[i].avgAvoidanceHeading = avoidanceHeading;
@@ -125,6 +155,4 @@ public class BoidManager : MonoBehaviour {
             boids[i].UpdateBoid();
         }
     }
-
-    
 }
