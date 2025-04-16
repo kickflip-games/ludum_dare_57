@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using DG.Tweening;
+using UnityEngine;
 
 using UnityEngine.UI;
+    
 
 namespace Ilumisoft.RadarSystem.UI
 {
@@ -12,10 +15,17 @@ namespace Ilumisoft.RadarSystem.UI
     public class LocatableIcon : LocatableIconComponent
     {
         
-        public Sprite defaultIcon;
+        
+        [Header("Icon Sprites")]
+        [SerializeField]
+        private Sprite defaultIcon;
+        [SerializeField]
         public Sprite upIcon;
+        [SerializeField]
         public Sprite downIcon;
+        
         protected Image iconImage;
+        protected RectTransform iconRectTransform;
         
         protected CanvasGroup CanvasGroup { get; set; }
 
@@ -23,7 +33,11 @@ namespace Ilumisoft.RadarSystem.UI
         {
             CanvasGroup = GetComponent<CanvasGroup>();
             iconImage = GetComponent<Image>();
+            iconRectTransform = GetComponent<RectTransform>();
+
         }
+        
+        
 
         public override void SetVisible(bool visibility)
         {
@@ -45,6 +59,21 @@ namespace Ilumisoft.RadarSystem.UI
                 iconImage.sprite = defaultIcon;
             }
         }
+        
+        
+        public void PlayPulseAnimation()
+        {
+            // DoTween to pulsate the icon
+            if (!DOTween.IsTweening(iconRectTransform))
+            {
+                // DoTween to pulsate the icon
+                iconRectTransform.DOPunchScale(Vector3.one * 0.5f, 0.3f, 1, 0.5f)
+                    .SetEase(Ease.OutSine)
+                    .SetLoops(2, LoopType.Yoyo);
+            }
+        
+        }
+        
         
     }
 }

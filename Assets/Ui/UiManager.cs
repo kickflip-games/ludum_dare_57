@@ -20,7 +20,8 @@ public class UiManager : MonoBehaviour
     private float _elapsedTime = 0f;
     private int totalItemsToCollect;
     private int itemsCollected = 0;
-
+    
+    
     private int cleanup_percent
     {
         get
@@ -78,6 +79,9 @@ public class UiManager : MonoBehaviour
         {
             StartTimerAndHideStartUi();
         }
+        
+
+        
     }
 
 

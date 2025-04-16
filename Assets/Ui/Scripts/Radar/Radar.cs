@@ -114,6 +114,9 @@ namespace Ilumisoft.RadarSystem
         /// </summary>
         private void UpdateLocatableIcons()
         {
+            LocatableComponent closestLocatable = null;
+            float closestDistanceSqr = float.MaxValue;
+        
             // Run through all locatables in the dictionary
             foreach (var locatable in locatableIconDictionary.Keys)
             {
@@ -139,16 +142,33 @@ namespace Ilumisoft.RadarSystem
                             // Within threshold—use default icon.
                             icon.SetSprite(0);
                         }
-                        
+        
                         icon.SetVisible(true);
-
+        
                         var rectTransform = icon.GetComponent<RectTransform>();
                         rectTransform.anchoredPosition = iconLocation;
+        
+                        // Calculate the squared distance to the player
+                        float distanceSqr = (locatable.transform.position - Player.transform.position).sqrMagnitude;
+                        if (distanceSqr < closestDistanceSqr)
+                        {
+                            closestDistanceSqr = distanceSqr;
+                            closestLocatable = locatable;
+                        }
                     }
                     else
                     {
                         icon.SetVisible(false);
                     }
+                }
+            }
+        
+            // Trigger animation on the closest locatable's icon
+            if (closestLocatable != null && locatableIconDictionary.TryGetValue(closestLocatable, out var closestIcon))
+            {
+                if (closestIcon is LocatableIcon locatableIcon)
+                {
+                    locatableIcon.PlayPulseAnimation();
                 }
             }
         }

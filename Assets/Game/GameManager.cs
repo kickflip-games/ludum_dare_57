@@ -20,16 +20,25 @@ public class GameManager : MonoBehaviour
     bool _isGameRunning = false;
     bool _isGameComplete = false;
 
-    
-    private void Start()
-    {
 
+    private void Awake()
+    {
         _player = FindObjectOfType<Submarine>();
         if (_player == null)
         {
             Debug.LogError("Player not found in the scene.");
         }
+    }
+
+
+    private void Start()
+    {
         _player.PauseMovement(true);
+    }
+
+    public Submarine GetPlayer()
+    {
+        return _player;
     }
     
     void Update()
