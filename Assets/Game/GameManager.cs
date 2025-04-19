@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using Unity.Cinemachine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -17,8 +17,14 @@ public class GameManager : MonoBehaviour
     public static event Action OnGameStart;
     private Submarine _player;
     
+    
     bool _isGameRunning = false;
     bool _isGameComplete = false;
+
+
+    [SerializeField] private CinemachineCamera _startCam;
+    [SerializeField] private CinemachineCamera _followCam;
+    
 
 
     private void Awake()
@@ -34,6 +40,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _player.PauseMovement(true);
+        _startCam.Priority = 1;
+        _followCam.Priority = 0;
     }
 
     public Submarine GetPlayer()
@@ -41,26 +49,7 @@ public class GameManager : MonoBehaviour
         return _player;
     }
     
-    void Update()
-    {
-        // if Any key is pressed/mouse clicked/screen touched,  and game is not started
-        if (!_isGameRunning)
-        {
-            if (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.touchCount > 0)
-            {
-                // check if game is not complete
-                if (!_isGameComplete)
-                {
-                    StartGame();
-                }
-                else
-                {
-                    // Restart the game (reload the scene)
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                }
-            }
-        }
-    }
+
     
     
     private void OnEnable()
@@ -106,13 +95,27 @@ public class GameManager : MonoBehaviour
         _isGameRunning = false;
         _isGameComplete = true;
     }
-
-    void StartGame()
+    
+    public void StartGame()
     {
-        _player.PauseMovement(false);
-        _isGameRunning = true;
-        OnGameStart?.Invoke();
+        if (!_isGameComplete)
+        {
+            _player.PauseMovement(false);
+            _isGameRunning = true;
+        
+            // Set startCam priority to 0 and followCam to 1
+            _startCam.Priority = 0;
+            _followCam.Priority = 1;
+        
+            OnGameStart?.Invoke();
+        }
+        else
+        {
+            // Restart the game (reload the scene)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
+    
 
     
 }

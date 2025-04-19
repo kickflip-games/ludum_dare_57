@@ -39,6 +39,17 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     private Camera cam;
 
     private Vector2 input = Vector2.zero;
+    
+    
+        
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private float fadeDuration = 1.2f;
+    [SerializeField] private float inactiveAlpha = 0f;
+    [SerializeField] private float activeAlpha = 0.2f;
+
+    private Coroutine fadeCoroutine;
+
+
 
     protected virtual void Start()
     {
@@ -46,6 +57,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         DeadZone = deadZone;
         baseRect = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
+        canvasGroup = GetComponent<CanvasGroup>();
         if (canvas == null)
             Debug.LogError("The Joystick is not placed inside a canvas");
 
@@ -56,20 +68,56 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         handle.pivot = center;
         handle.anchoredPosition = Vector2.zero;
         
-        DisableIfNotMobile();
+        // DisableIfNotMobile();
+        // if (canvasGroup != null)
+        //     canvasGroup.alpha = joystickType == JoystickType.Fixed ? activeAlpha : inactiveAlpha;
+        canvasGroup.alpha = inactiveAlpha;
+        
+        
     }
 
     
-    void DisableIfNotMobile()
+    // void DisableIfNotMobile()
+    // {
+    //     if (PlatformDetector.Instance != null)
+    //         if (PlatformDetector.Instance.CurrentPlatform != PlatformDetector.PlatformType.WebGL_Mobile)
+    //             gameObject.SetActive(false);
+    // }
+    //
+    
+    
+    private void FadeCanvasGroup(float targetAlpha)
     {
-        if (PlatformDetector.Instance != null)
-            if (PlatformDetector.Instance.CurrentPlatform != PlatformDetector.PlatformType.WebGL_Mobile)
-                gameObject.SetActive(false);
+        if (fadeCoroutine != null)
+            StopCoroutine(fadeCoroutine);
+        fadeCoroutine = StartCoroutine(FadeToAlpha(targetAlpha));
     }
+
+    private IEnumerator FadeToAlpha(float targetAlpha)
+    {
+        float startAlpha = canvasGroup.alpha;
+        float time = 0f;
+
+        while (time < fadeDuration)
+        {
+            time += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / fadeDuration);
+            yield return null;
+        }
+
+        canvasGroup.alpha = targetAlpha;
+    }
+
+
+
     
     public virtual void OnPointerDown(PointerEventData eventData)
     {
         OnDrag(eventData);
+        // FadeCanvasGroup(activeAlpha);
+        if (fadeCoroutine != null)
+            StopCoroutine(fadeCoroutine);
+        canvasGroup.alpha = activeAlpha;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -84,6 +132,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         FormatInput();
         HandleInput(input.magnitude, input.normalized, radius, cam);
         handle.anchoredPosition = input * radius * handleRange;
+        canvasGroup.alpha = activeAlpha;
     }
 
     protected virtual void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)
@@ -143,6 +192,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         input = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
+        FadeCanvasGroup(inactiveAlpha);
     }
 
     protected Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition)
@@ -154,6 +204,18 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             return localPoint - (background.anchorMax * baseRect.sizeDelta) + pivotOffset;
         }
         return Vector2.zero;
+    }
+    
+    
+    private void Update()
+    {
+        // if any click/touch on the screen, set the alpha to activeAlpha
+        if (Input.GetMouseButton(0) || Input.touchCount > 0)
+        {
+            canvasGroup.alpha = activeAlpha;
+            FadeCanvasGroup(inactiveAlpha);
+        }
+        
     }
 }
 

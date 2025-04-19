@@ -10,9 +10,13 @@ public class Item : MonoBehaviour
     // Flag to indicate whether this item was collected
     [SerializeField]
     private bool isCollected = false;
-    
-    
 
+    [SerializeField]
+    private GameObject FxPrefab;
+    
+    
+    // SFX 
+    public AudioClip collectSFX;
     // // The target submarine that this item should follow
     // private Transform targetSubmarine;
     // private Fish fish;
@@ -48,6 +52,17 @@ public class Item : MonoBehaviour
 
             // Fire any subscribed events.
             OnItemCollected?.Invoke();
+            
+            // Instantiate the effect prefab if it exists.
+            if (FxPrefab != null)
+            {
+                GameObject fx = Instantiate(FxPrefab, transform.position, Quaternion.identity);
+                Destroy(fx, 2f); // Destroy the effect after 2 seconds.
+            }
+            if (collectSFX != null)
+            {
+                AudioSource.PlayClipAtPoint(collectSFX, transform.position, 1.0f);
+            }
             
             // Instead of destroying the item, start following the submarine.
             // StartFollowing(player.transform);

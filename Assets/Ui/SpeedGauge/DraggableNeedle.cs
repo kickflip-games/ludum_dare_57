@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DraggableNeedle : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+public class DraggableNeedle : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     // Assign these in the Unity Inspector
-    public Texture2D handCursor;
-    public Texture2D grabbingCursor;
-    public Vector2 cursorHotspot = new Vector2(16, 16);
+
 
     [SerializeField]
     [Range(0.0f, 360.0f)]
@@ -34,26 +32,11 @@ public class DraggableNeedle : MonoBehaviour, IPointerDownHandler, IDragHandler,
         
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (!dragging)
-        {
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-        }
-    }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (!dragging)
-        {
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-        }
-    }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         dragging = true;
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         UpdateNeedleFromPointer(eventData);
     }
 
@@ -68,7 +51,6 @@ public class DraggableNeedle : MonoBehaviour, IPointerDownHandler, IDragHandler,
     public void OnPointerUp(PointerEventData eventData)
     {
         dragging = false;
-        Cursor.SetCursor(handCursor, cursorHotspot, CursorMode.Auto);
     }
 
     // This method converts the pointer position into a gauge value and rotates the needle accordingly.

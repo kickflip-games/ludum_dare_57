@@ -61,16 +61,16 @@ public class PlatformDetector : MonoBehaviour
     }
 #endif
 
-    // Display the detected platform on the game screen (bottom left corner)
-    void OnGUI()
-    {
-        GUIStyle style = new GUIStyle
-        {
-            fontSize = 8,
-            normal = { textColor = Color.white }
-        };
-
-        // Adjust the label's position to the bottom left of the screen.
-        GUI.Label(new Rect(5, Screen.height - 15, 300, 20), "Platform: " + CurrentPlatform, style);
-    }
+    // // Display the detected platform on the game screen (bottom left corner)
+    // void OnGUI()
+    // {
+    //     GUIStyle style = new GUIStyle
+    //     {
+    //         fontSize = 8,
+    //         normal = { textColor = Color.white }
+    //     };
+    //
+    //     // Adjust the label's position to the bottom left of the screen.
+    //     GUI.Label(new Rect(5, Screen.height - 15, 300, 20), "Platform: " + CurrentPlatform, style);
+    // }
 }

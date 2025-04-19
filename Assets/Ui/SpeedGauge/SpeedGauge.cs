@@ -12,7 +12,7 @@ public class SpeedGauge : MonoBehaviour
     [Range(0, 1)]
     [SerializeField]
     private float NeedlePosition = 0.5f; // 0.0f = 0 degrees, 1.0f = -90 degrees
-
+    
     private GameObject _needle;
     private readonly float[] _rotatationRange = { 0.1f, -89.9f };
 

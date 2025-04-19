@@ -46,12 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 8141749498972767929, guid: ae5713f60e9d5473ca28d0b2208be3a1,
     type: 3}
-  spawnBounds: {x: 10, y: 0, z: 10}
+  spawnBounds: {x: 50, y: 18.6, z: 50}
   totalSpawnedItems: 0
-  checkRadius: 0.5
+  checkRadius: 2
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 0
-  maxAttempts: 10
-  itemsToSpawn: 10
+    m_Bits: 576
+  maxAttempts: 100
+  itemsToSpawn: 1
   spawnedItems: []

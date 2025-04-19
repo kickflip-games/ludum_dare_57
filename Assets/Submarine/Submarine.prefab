@@ -223,8 +223,8 @@ MeshRenderer:
   m_GameObject: {fileID: 505629109124931185}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -275,7 +275,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &4491818396680948444
 Transform:
@@ -396,7 +396,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -567,8 +567,8 @@ MeshRenderer:
   m_GameObject: {fileID: 1490680145108344514}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -653,7 +653,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1665687532775540038}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -826,8 +826,8 @@ MeshRenderer:
   m_GameObject: {fileID: 2456621498136674139}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -906,6 +906,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6175377009393544882}
   - component: {fileID: 2388981965609771046}
+  - component: {fileID: 2937247558174413487}
   m_Layer: 8
   m_Name: Spot Light
   m_TagString: Untagged
@@ -993,6 +994,29 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &2937247558174413487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2660590727822994136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &3266923827210051016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,7 +1207,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 0
 --- !u!4 &3580529830211335411
 Transform:
@@ -1484,6 +1508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 5
+  _speed: 0
   maxPitchSpeed: 50
   maxTurnSpeed: 80
   acceleration: 1
@@ -1499,6 +1524,7 @@ MonoBehaviour:
   propSpinMat: {fileID: 2100000, guid: 9e6a5d578d16a48fdb275cd105910dab, type: 2}
   isPaused: 0
   gyroHandler: {fileID: 0}
+  variableJoystick: {fileID: 0}
 --- !u!114 &2318049918923449601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1564,7 +1590,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1736,7 +1762,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1873,7 +1899,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &608890702916876617
 Transform:
@@ -1911,7 +1937,7 @@ MeshRenderer:
   m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1960,7 +1986,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &2000026671766901858
 Transform:
@@ -2388,6 +2414,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1809948620648870311}
     m_Modifications:
+    - target: {fileID: 1483437768182853049, guid: 95b7bd921c41f4972bf828152a9b7ace,
+        type: 3}
+      propertyPath: maxTrailRate
+      value: 85.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1483437768182853049, guid: 95b7bd921c41f4972bf828152a9b7ace,
+        type: 3}
+      propertyPath: maxCircleRate
+      value: 52.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1581230677397907548, guid: 95b7bd921c41f4972bf828152a9b7ace,
         type: 3}
       propertyPath: m_Name

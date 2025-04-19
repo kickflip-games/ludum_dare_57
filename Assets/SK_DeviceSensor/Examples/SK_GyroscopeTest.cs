@@ -14,14 +14,36 @@ namespace SK.GyroscopeWebGL.Examples
         private Quaternion calibrationOffset = Quaternion.identity;
         // Store the most recent gyroscope reading
         private GyroscopeData lastReading;
+        
+        public bool isGyroEnabled = false;
+        
+        
+        
+        public bool deviceSupportsGyro
+        {
+            get
+            {
+                // Check if the device supports gyroscope
+                return SystemInfo.supportsGyroscope && Application.isMobilePlatform;
+            }
+        }
 
         private void Start()
         {
-            // Start the gyroscope listener by default
-            SK_DeviceSensor.StartGyroscopeListener(OnGyroscopeReading);
+            if (!deviceSupportsGyro)
+            {
+                Debug.LogWarning("Gyroscope not supported on this device.");
+                return;
+            }
+            else
+            {
+                // Start the gyroscope listener by default
+                SK_DeviceSensor.StartGyroscopeListener(OnGyroscopeReading);
             
-            // Automatically calibrate the gyroscope after a short delay to allow valid readings to come in.
-            StartCoroutine(CalibrateGyroAtStart());
+                // Automatically calibrate the gyroscope after a short delay to allow valid readings to come in.
+                StartCoroutine(CalibrateGyroAtStart());
+            }
+
         }
 
         private void OnDestroy()
@@ -56,6 +78,9 @@ namespace SK.GyroscopeWebGL.Examples
         /// <param name="reading">The current sensor reading.</param>
         private void OnGyroscopeReading(GyroscopeData reading)
         {
+            if (!isGyroEnabled)
+                return;
+            
             // Save the latest reading for calibration purposes.
             lastReading = reading;
 
